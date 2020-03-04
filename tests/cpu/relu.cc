@@ -1,34 +1,17 @@
+#include "dnn-kernel/relu.h"
 
 #include <algorithm>
 #include <cstdint>
 #include <iostream>
 
-#include "gtest/gtest.h"
+#include <gtest/gtest.h>
 
-#include "torch/torch.h"
+#include <torch/torch.h>
 
-#include "dnn-kernel/relu.h"
+#include <tests/util.h>
 
+using namespace dnnk;
 namespace F = torch::nn::functional;
-
-float* tensor2array(const torch::Tensor& tensor) {
-  float* ret = new float[tensor.numel()];
-  std::memcpy(ret, tensor.data_ptr(), tensor.nbytes());
-  return ret;
-}
-
-bool verify(const float* actual, const torch::Tensor& expect) {
-  const float tolerance = 10e-5f;
-  auto expect_ptr = expect.data_ptr<float>();
-
-  for (auto i = decltype(expect.numel())(0); i < expect.numel(); ++i) {
-    if (std::abs(actual[i] - expect_ptr[i]) >= tolerance) {
-      return false;
-    }
-  }
-
-  return true;
-}
 
 TEST(CPUVerify, ReLU) {
   auto x_ref = torch::randn({28, 28, 1});
