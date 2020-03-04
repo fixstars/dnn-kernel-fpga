@@ -12,8 +12,7 @@ if(NOT CMAKE_BUILD_TYPE)
 endif()
 
 # Project settings
-set(DNNK_INCLUDE_DIRS ${PROJECT_SOURCE_DIR}/include)
-set(DNNK_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
+set(DNNK_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
 set(DNNK_CXX_FLAGS "-g" "-Wall" "-Wno-uninitialized" "-Wno-unused-function" "-Wno-unknown-pragmas")
 
 
