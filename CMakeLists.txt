@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.9.4 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.11 FATAL_ERROR)
 enable_testing()
 
 # Project
@@ -17,24 +17,21 @@ set(DNNK_SRC_DIR ${PROJECT_SOURCE_DIR}/src)
 set(DNNK_CXX_FLAGS "-g" "-Wall" "-Wno-uninitialized" "-Wno-unused-function" "-Wno-unknown-pragmas")
 
 
-# 3rdpartys
+# thirdpartys
 include(ExternalProject)
+include(FetchContent)
 
 ## libtorch
-set(LIBTORCH_PREFIX ${PROJECT_BINARY_DIR}/thirdparty/libtorch)
-set(LIBTORCH_INSTALL ${LIBTORCH_PREFIX}/src/libtorch)
-
-ExternalProject_Add(
+FetchContent_Declare(
   libtorch
-  PREFIX ${LIBTORCH_PREFIX}
-
   URL https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.4.0%2Bcpu.zip
-  CONFIGURE_COMMAND ""
-  BUILD_COMMAND ""
-  INSTALL_COMMAND ""
 )
+FetchContent_GetProperties(libtorch)
+if(NOT libtorch_POPULATED)
+  FetchContent_Populate(libtorch)
+endif()
 
-list(APPEND CMAKE_PREFIX_PATH ${LIBTORCH_INSTALL})
+list(APPEND CMAKE_PREFIX_PATH ${libtorch_SOURCE_DIR})
 find_package(Torch REQUIRED)
 
 ## googletest
