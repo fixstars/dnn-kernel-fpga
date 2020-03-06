@@ -21,8 +21,6 @@ TEST(CPUVerify, ReLU) {
   dnnk::relu(x, x_ref.numel(), y);
   auto y_ref = F::detail::relu(x_ref, false);
 
-  std::cout << y_ref << std::endl;
-
   EXPECT_TRUE(verify(y, y_ref));
 }
 

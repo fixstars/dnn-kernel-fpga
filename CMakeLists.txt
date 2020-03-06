@@ -31,13 +31,15 @@ if(NOT libtorch_POPULATED)
 endif()
 
 list(APPEND CMAKE_PREFIX_PATH ${libtorch_SOURCE_DIR})
+set(TORCH_LIBRARY_DIRS ${libtorch_SOURCE_DIR}/lib)
 find_package(Torch REQUIRED)
 
 ## googletest
 set(GTEST_PREFIX ${PROJECT_BINARY_DIR}/thirdparty/googletest)
 set(GTEST_INSTALL ${GTEST_PREFIX}/install)
 set(GTEST_INCLUDE_DIRS ${GTEST_INSTALL}/include)
-set(GTEST_LIB ${GTEST_INSTALL}/lib/libgtest.a)
+set(GTEST_LIBRARY_DIRS ${GTEST_INSTALL}/lib)
+set(GTEST_LIBRARIES ${GTEST_INSTALL}/lib/libgtest.a)
 
 ExternalProject_Add(
   googletest
