@@ -2,9 +2,10 @@
 A project for self-implementation and testing kernels of deep learning.
 
 ## Dependencies
-- Ubuntu (>=16.04)
-- CMake (>=3.11)
-- Vivado HLS
+- Ubuntu (>= 16.04)
+- Python (>= 3.5.2)
+- CMake (>= 3.11)
+- Vivado HLS (>= 2019.1)
 
 ## Build
 #### Clone
@@ -26,7 +27,7 @@ cmake --build . --target test
 
 #### Unit test
 You can run specify unit test. 
-For example, you want to run "ReLU" unit test, execute the above commands.
+For example, you want to run `ReLU` unit test, execute the above commands.
 
 ```sh
 ctest -V -R "relu_ref"         # Test of reference implementation
@@ -36,5 +37,5 @@ ctest -V -R "relu_hls_cosim"   # C/RTL co-simulation test of HLS implementation
 
 ## Implementation IP
 ```sh
-make relu_hls_impl
+cmake --build . --target relu_hls_impl
 ```
