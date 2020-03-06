@@ -15,6 +15,10 @@ endif()
 set(DNNK_INCLUDE_DIRS ${PROJECT_SOURCE_DIR} ${PROJECT_SOURCE_DIR}/include)
 set(DNNK_CXX_FLAGS "-g" "-Wall" "-Wno-uninitialized" "-Wno-unused-function" "-Wno-unknown-pragmas")
 
+# Vivado HLS
+set(VIVADO_HLS_ROOT "/opt/Xilinx/VivadoHLS/2019.1" CACHE STRING "Path to Vivado HLS root directory")
+set(VHLS_INCLUDE_DIRS ${VIVADO_HLS_ROOT}/include)
+
 
 # thirdpartys
 include(ExternalProject)
@@ -50,9 +54,9 @@ ExternalProject_Add(
   BUILD_BYPRODUCTS ${GTEST_LIB}
 )
 
-
 # Logging
 message(STATUS "Build type: ${CMAKE_BUILD_TYPE}")
+message(STATUS "Path to Vivado HLS: ${VIVADO_HLS_ROOT}")
 
 # tests
 add_subdirectory(tests)
