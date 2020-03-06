@@ -2,7 +2,7 @@ file(GLOB TEST_SRCS *.cc)
 
 foreach(test_path ${TEST_SRCS})
   get_filename_component(test_file ${test_path} NAME)
-  string(REPLACE ".cc" "" test_name ${test_file})
+  string(REPLACE ".cc" "" test_name ${test_file}_ref)
   add_executable(${test_name} ${test_file})
   add_dependencies(${test_name} googletest)
   target_include_directories(${test_name} PRIVATE ${DNNK_INCLUDE_DIRS} ${TORCH_INCLUDE_DIRS} ${GTEST_INCLUDE_DIRS})

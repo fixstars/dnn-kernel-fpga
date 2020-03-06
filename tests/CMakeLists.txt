@@ -1,2 +1,2 @@
-add_subdirectory(cpu)
+add_subdirectory(ref)
 add_subdirectory(hls)

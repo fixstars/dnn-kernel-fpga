@@ -99,7 +99,4 @@ function(add_test_and_impl name top)
   add_impl(${name}_impl ${top} CXXFLAGS ${ARG_CXXFLAGS} HLS_SRC ${ARG_HLS_SRC})
 endfunction()
 
-set(hls_src relu_hls.cc)
-set(test_src relu.cc)
-
-add_test_and_impl(relu relu_hls HLS_SRC ${hls_src} TB_SRC ${test_src})
+add_subdirectory(relu)
