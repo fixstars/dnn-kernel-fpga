@@ -32,7 +32,7 @@ function(add_csim name)
 
   # For checking c++ standards
   set_source_files_properties("${ARG_TB_SRC}" PROPERTIES COMPILE_FLAGS "-std=c++14")
-  set_source_files_properties("${ARG_HLS_SRC}" PROPERTIES COMPILE_FLAGS "-std=c++14")
+  set_source_files_properties("${ARG_HLS_SRC}" PROPERTIES COMPILE_FLAGS "-std=c++98")
 
   target_include_directories(${name} PRIVATE ${DNNK_INCLUDE_DIRS} ${VHLS_INCLUDE_DIRS} ${TORCH_INCLUDE_DIRS} ${GTEST_INCLUDE_DIRS})
   target_compile_options(${name} PRIVATE ${DNNK_CXX_FLAGS} ${ARG_CXXFLAGS})
@@ -61,7 +61,7 @@ function(add_cosim name top)
   set(libraries "torch" "c10" "gtest" "pthread")
   prepend_option("${libraries}" "-l" librariy_options)
 
-  set(cxxflags ${ARG_CXXFLAGS} ${include_options} "-std=c++11")
+  set(cxxflags ${ARG_CXXFLAGS} ${include_options})
   list2str("${cxxflags}" cxxflags_str)
 
   set(ldflags ${library_dir_options} ${librariy_options} ${rpath_options})

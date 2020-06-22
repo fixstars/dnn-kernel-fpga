@@ -8,14 +8,6 @@ namespace dnnk {
 namespace {
 
 void conv2d(const float *x, const float* weight, const float* bias, int32_t width, int32_t height, int32_t in_channels, int32_t out_channels, int32_t ksize, float *y) {
-    auto idx3d = [&](int32_t h, int32_t w, int32_t ch) {
-        return (ch * height + h) * width + w;
-    };
-
-    auto idx4d = [&](int32_t och, int32_t ich, int32_t kh, int32_t kw) {
-        return ((och * in_channels + ich) * ksize + kh) * ksize + kw;
-    };
-
     for (int32_t h = 0; h < height; ++h) {
         for (int32_t w = 0; w < width; ++w) {
             for (int32_t och = 0; och < out_channels; ++och) {
@@ -33,12 +25,15 @@ void conv2d(const float *x, const float* weight, const float* bias, int32_t widt
                                 continue;
                             }
 
-                            sum += x[idx3d(h + kh - ksize/2, w + kw - ksize/2, ich)] * weight[idx4d(och, ich, kh, kw)];
+                            int64_t pix_idx = (ich * height + ph) * width + pw;
+                            int64_t weight_idx = ((och * in_channels + ich) * ksize + kh) * ksize + kw;
+
+                            sum += x[pix_idx] * weight[weight_idx];
                         }
                     }
                 }
 
-                y[idx3d(h, w, och)] = sum + bias[och];
+                y[(och * height + h) * width + w] = sum + bias[och];
             }
         }
     }
