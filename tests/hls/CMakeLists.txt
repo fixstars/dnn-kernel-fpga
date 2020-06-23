@@ -100,3 +100,6 @@ function(add_test_and_impl name top)
 endfunction()
 
 add_subdirectory(relu)
+add_subdirectory(conv2d)
+add_subdirectory(maxpool2d)
+add_subdirectory(linear)
