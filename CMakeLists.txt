@@ -60,4 +60,3 @@ message(STATUS "Path to Vivado HLS: ${VIVADO_HLS_ROOT}")
 
 # tests
 add_subdirectory(tests)
-add_subdirectory(learning)
