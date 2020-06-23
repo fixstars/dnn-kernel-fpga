@@ -89,7 +89,7 @@ optimizer = torch.optim.Adam(net.parameters(), lr=0.0001)
 
 # 3. 学習
 ## データセット内の全画像を2回使用するまでループ
-for epoch in range(2):
+for epoch in range(20):
     running_loss = 0
     ## データセット内でループ
     for i, data in enumerate(trainloader, 0):
