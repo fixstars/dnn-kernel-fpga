@@ -1,5 +1,5 @@
-#ifndef DNNKERNEL_RELU_H
-#define DNNKERNEL_RELU_H
+#ifndef DNNKERNEL_LINEAR_H
+#define DNNKERNEL_LINEAR_H
 
 #include <stdint.h>
 #include <algorithm>
@@ -20,4 +20,4 @@ void linear(const float *x, const float* weight, const float* bias, int64_t in_f
 }  // namespace
 }  // namespace dnnk
 
-#endif  // DNNKERNEL_RELU_H
+#endif  // DNNKERNEL_LINEAR_H
