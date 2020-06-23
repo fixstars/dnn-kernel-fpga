@@ -14,5 +14,5 @@ void conv2d_hls(const float x[kMaxSize], const float weight[kMaxSize], const flo
 #pragma HLS interface s_axilite port = out_channels bundle = BUS_AXI4LS
 #pragma HLS interface s_axilite port = ksize bundle = BUS_AXI4LS
 
-    dnnk::conv2d(x, weight, bias, width, height, in_channels, out_channels, ksize, y);
+  dnnk::conv2d(x, weight, bias, width, height, in_channels, out_channels, ksize, y);
 }

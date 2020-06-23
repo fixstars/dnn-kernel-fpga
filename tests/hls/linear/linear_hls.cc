@@ -11,5 +11,5 @@ void linear_hls(const float x[kMaxSize], const float weight[kMaxSize], const flo
 #pragma HLS interface s_axilite port = in_features bundle = BUS_AXI4LS
 #pragma HLS interface s_axilite port = out_features bundle = BUS_AXI4LS
 
-    dnnk::linear(x, weight, bias, in_features, out_features, y);
+  dnnk::linear(x, weight, bias, in_features, out_features, y);
 }

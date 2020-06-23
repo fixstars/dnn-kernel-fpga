@@ -13,5 +13,5 @@ void maxpool2d_hls(const float x[kMaxSize], int32_t width, int32_t height, int32
 #pragma HLS interface s_axilite port = channels bundle = BUS_AXI4LS
 #pragma HLS interface s_axilite port = stride bundle = BUS_AXI4LS
 
-    dnnk::maxpool2d(x, width, height, channels, stride, y);
+  dnnk::maxpool2d(x, width, height, channels, stride, y);
 }
