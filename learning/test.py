@@ -8,17 +8,17 @@ from sklearn.metrics import accuracy_score
 import matplotlib.pyplot as plt
 # 2. ネットワークモデルの定義
 class Net(nn.Module):
-    def __init__(self, ksize = 3, pd = 1, num_output_classes=10):
+    def __init__(self, num_output_classes=10):
         super(Net, self).__init__()
         ## 入力はRGB画像 (チャネル数=3)
         ## 出力が8チャネルとなるような畳み込みを行う
-        self.conv1 = nn.Conv2d(in_channels=3, out_channels=20, kernel_size = ksize, padding=pd)
+        self.conv1 = nn.Conv2d(in_channels=3, out_channels=20, kernel_size = 3, padding=1)
         
         ## 画像を32x32から16x16に縮小する
         self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
         
         ## 8ch -> 16ch, 16x16 -> 8x8
-        self.conv2 = nn.Conv2d(in_channels=20, out_channels=50, kernel_size = ksize, padding=pd)
+        self.conv2 = nn.Conv2d(in_channels=20, out_channels=50, kernel_size = 3, padding=1)
         self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         ## ドロップアウト
@@ -78,7 +78,7 @@ testloader = torch.utils.data.DataLoader(testset, batch_size=4, shuffle=False)
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 print(f"device = {device}")
 
-net = Net(3, 1, 10)
+net = Net()
 net = net.to(device)
 
 ## ロス関数、最適化器の定義
@@ -88,7 +88,7 @@ loss_func = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(net.parameters(), lr=0.0001)
 
 # 3. 学習
-## データセット内の全画像を4回使用するまでループ
+## データセット内の全画像を2回使用するまでループ
 for epoch in range(2):
     running_loss = 0
     ## データセット内でループ
