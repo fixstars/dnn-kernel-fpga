@@ -1,7 +1,6 @@
 
 import torch
 import torch.nn as nn
-import torch.nn.functional as F
 import torchvision
 import torchvision.transforms as transforms
 from sklearn.metrics import accuracy_score, confusion_matrix
@@ -16,16 +15,21 @@ class Net(nn.Module):
         # 出力が8チャネルとなるような畳み込みを行う
         self.conv1 = nn.Conv2d(in_channels=1, out_channels=4, kernel_size=3, padding=1)
 
+        # 活性化関数はReLU
+        self.relu1 = nn.ReLU(inplace=True)
+
         # 画像を28x28から14x14に縮小する
         self.pool1 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         # 4ch -> 8ch, 14x14 -> 7x7
         self.conv2 = nn.Conv2d(in_channels=4, out_channels=8, kernel_size=3, padding=1)
+        self.relu2 = nn.ReLU(inplace=True)
         self.pool2 = nn.MaxPool2d(kernel_size=2, stride=2)
 
         # 全結合層
         # 8chの7x7画像を1つのベクトルとみなし、要素数32のベクトルまで縮小
         self.fc1 = nn.Linear(8 * 7 * 7, 32)
+        self.relu3 = nn.ReLU(inplace=True)
 
         # 全結合層その2
         # 出力クラス数まで縮小
@@ -35,14 +39,14 @@ class Net(nn.Module):
         # 1層目の畳み込み
         # 活性化関数 (activation) はReLU
         x = self.conv1(x)
-        x = F.relu(x)
+        x = self.relu1(x)
 
         # 縮小
         x = self.pool1(x)
 
         # 2層目+縮小
         x = self.conv2(x)
-        x = F.relu(x)
+        x = self.relu2(x)
         x = self.pool2(x)
 
         # フォーマット変換 (Batch, Ch, Height, Width) -> (Batch, Ch)
@@ -50,7 +54,7 @@ class Net(nn.Module):
 
         # 全結合層
         x = self.fc1(x)
-        x = F.relu(x)
+        x = self.relu3(x)
         x = self.fc2(x)
 
         return x
