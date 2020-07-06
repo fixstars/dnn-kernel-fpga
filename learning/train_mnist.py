@@ -77,8 +77,6 @@ loss_func = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(net.parameters(), lr=0.0001)
 
 # 3. 学習
-print('begin training:')
-
 # データセット内の全画像を10回使用するまでループ
 for epoch in range(10):
     running_loss = 0
@@ -105,7 +103,6 @@ for epoch in range(10):
             print('[%d, %5d] loss: %.3f' %
                   (epoch + 1, i + 1, running_loss / 1000))
             running_loss = 0.0
-print('end training:')
 
 # 4. テスト
 ans = []
