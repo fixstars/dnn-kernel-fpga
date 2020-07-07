@@ -21,8 +21,8 @@ void inference(const float *x,
                float *y) {
 #pragma HLS inline
 
-  static const int kWidths[] = {32, 16, 8};
-  static const int kHeights[] = {32, 16, 8};
+  static const int kWidths[] = {28, 14, 7};
+  static const int kHeights[] = {28, 14, 7};
 
 #ifndef __SYNTHESIS__
   float* x1 = new float[kWidths[0] * kHeights[0] * CH1];
