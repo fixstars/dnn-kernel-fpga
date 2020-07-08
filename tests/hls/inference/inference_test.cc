@@ -17,7 +17,7 @@
 #error "PROJECT_ROOT is not defined"
 #endif
 
-static const std::size_t kMaxSize = 4096;
+static const std::size_t kMaxSize = 16384;
 
 using namespace dnnk;
 namespace F = torch::nn::functional;

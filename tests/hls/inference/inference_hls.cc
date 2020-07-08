@@ -3,7 +3,7 @@
 #include <stdint.h>
 #include <algorithm>
 
-static const std::size_t kMaxSize = 1024;
+static const std::size_t kMaxSize = 16384;
 
 void inference_hls(const float x[kMaxSize],
                    const float weight0[kMaxSize], const float bias0[kMaxSize],
