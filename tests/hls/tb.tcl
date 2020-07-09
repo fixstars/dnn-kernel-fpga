@@ -17,7 +17,7 @@ set_top ${top}
 add_files ${hls_srcs} -cflags "${cxxflags}"
 
 open_solution "solution1"
-set_part {xczu3eg-sfvc784-2L-e}
+set_part {xcu200-fsgd2104-2-e}
 create_clock -period 5.00 -name default
 
 csynth_design
