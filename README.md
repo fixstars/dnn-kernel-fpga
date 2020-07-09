@@ -2,10 +2,10 @@
 A project for self-implementation and testing kernels of deep learning.
 
 ## Dependencies
-- Ubuntu (>= 16.04)
+- Ubuntu (>= 18.04)
 - Python (>= 3.5.2)
 - CMake (>= 3.11)
-- Vivado HLS (>= 2019.1)
+- Vivado HLS (>= 2019.2)
 
 ## Build
 #### Clone
