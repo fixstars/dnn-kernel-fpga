@@ -16,7 +16,7 @@ namespace F = torch::nn::functional;
 TEST(CPUVerify, Conv2d) {
   torch::manual_seed(0);
 
-  int h = 32, w = 32, in_channels = 4, out_channels = 8, ksize = 3;
+  int h = 14, w = 14, in_channels = 4, out_channels = 8, ksize = 3;
 
   auto x_ref = torch::randn({1, in_channels, h, w});
   auto weight_ref = torch::randn({out_channels, in_channels, ksize, ksize});
