@@ -27,8 +27,7 @@ int main() {
   // the cosimulation.
   torch::manual_seed(0);
 
-
-  float x[kMaxSize], y[kMaxSize];
+  std::vector<float> x, y;
   std::map<std::string, std::vector<float> > params;
 
   // load model file
@@ -60,22 +59,24 @@ int main() {
     auto x_ref = batch.data;   // shape = (1, 1, 28, 28)
     auto y_label = batch.target; // shape = (1)
 
-    // run inference
-    tensor2array(x_ref, x);
-    inference_hls(x,
-                  params.at("conv1.weight").data(), params.at("conv1.bias").data(),
-                  params.at("conv2.weight").data(), params.at("conv2.bias").data(),
-                  params.at("fc1.weight").data(), params.at("fc1.bias").data(),
-                  params.at("fc2.weight").data(), params.at("fc2.bias").data(),
-                  y);
-
-
     // run inference in pytorch
     std::vector<torch::jit::IValue> inputs;
     inputs.push_back(x_ref);
     auto y_ref = model.forward(inputs).toTensor();
 
-    if (!verify(y, y_ref)) {
+    x.resize(x_ref.numel());
+    y.resize(y_ref.numel());
+
+    // run inference
+    tensor2array(x_ref, x.data());
+    inference_hls(x.data(),
+                  params.at("conv1.weight").data(), params.at("conv1.bias").data(),
+                  params.at("conv2.weight").data(), params.at("conv2.bias").data(),
+                  params.at("fc1.weight").data(), params.at("fc1.bias").data(),
+                  params.at("fc2.weight").data(), params.at("fc2.bias").data(),
+                  y.data());
+
+    if (!verify(y.data(), y_ref)) {
       printf("%sFailed%s\n", Color::red, Color::reset);
       return 1;
     }
