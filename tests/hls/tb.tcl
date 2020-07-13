@@ -2,10 +2,12 @@ set mode [lindex $argv 2]
 set name [lindex $argv 3]
 set hls_srcs [lindex $argv 4]
 set top [lindex $argv 5]
-set cxxflags [lindex $argv 6]
-set ldflags [lindex $argv 7]
-set test_srcs [lindex $argv 8]
-set test_args [lindex $argv 9]
+set chip_part [lindex $argv 6]
+set cxxflags [lindex $argv 7]
+set ldflags [lindex $argv 8]
+set test_srcs [lindex $argv 9]
+set test_args [lindex $argv 10]
+
 
 open_project -reset ${name}
 
@@ -17,7 +19,7 @@ set_top ${top}
 add_files ${hls_srcs} -cflags "${cxxflags}"
 
 open_solution "solution1"
-set_part {xczu3eg-sfvc784-2L-e}
+set_part ${chip_part}
 create_clock -period 5.00 -name default
 
 csynth_design

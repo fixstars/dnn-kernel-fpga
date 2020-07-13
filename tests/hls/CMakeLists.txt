@@ -69,7 +69,7 @@ function(add_cosim name top)
   
   add_test(
     NAME ${name}
-    COMMAND vivado_hls -f ${TB_TCL} "cosim" ${name} "${abs_hls_srcs}" ${top} "cxxflags=${cxxflags_str}" "ldflags=${ldflags_str}" "${abs_tb_srcs}" "${ARG_UNPARSED_ARGUMENTS}"
+    COMMAND vivado_hls -f ${TB_TCL} "cosim" ${name} "${abs_hls_srcs}" ${top} ${CHIP_PART} "cxxflags=${cxxflags_str}" "ldflags=${ldflags_str}" "${abs_tb_srcs}" "${ARG_UNPARSED_ARGUMENTS}"
     WORKING_DIRECTORY ${WORK_DIR}
     )
 endfunction()
@@ -86,7 +86,7 @@ function(add_impl name top)
 
   add_custom_target(
     ${name}
-    COMMAND vivado_hls -f ${TB_TCL} "impl" ${name} "${abs_hls_srcs}" ${top} "cxxflags=${cxxflags_str}" ${ARG_UNPARSED_ARGUMENTS}
+    COMMAND vivado_hls -f ${TB_TCL} "impl" ${name} "${abs_hls_srcs}" ${top} ${CHIP_PART} "cxxflags=${cxxflags_str}" ${ARG_UNPARSED_ARGUMENTS}
     WORKING_DIRECTORY ${WORK_DIR}
     )
 endfunction()
