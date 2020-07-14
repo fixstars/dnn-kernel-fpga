@@ -18,6 +18,7 @@ set(DNNK_CXX_FLAGS "-g" "-Wall" "-Wno-uninitialized" "-Wno-unused-function" "-Wn
 # Vivado HLS
 set(VIVADO_HLS_ROOT "/opt/Xilinx/VivadoHLS/2019.1" CACHE STRING "Path to Vivado HLS root directory")
 set(VHLS_INCLUDE_DIRS ${VIVADO_HLS_ROOT}/include)
+set(XILINX_XRT "/opt/xilinx/xrt")
 
 # Target board
 set(TARGET_BOARD "u200" CACHE STRING "Select target Alveo board (available: \"u200\", \"u250\", \"u280\", \"u50\")")

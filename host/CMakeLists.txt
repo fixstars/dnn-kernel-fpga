@@ -1,4 +1,18 @@
 
+# host
+file(GLOB HOST_SRCS *.cc)
+
+find_library(XRT_LIBRARIES NAMES xrt_core PATHS ${XILINX_XRT}/lib)
+
+set(VITIS_INCLUDE_DIRS ${XILINX_XRT}/include ${XILINX_VIVADO}/include)
+set(VITIS_LIBRARIES OpenCL pthread ${XRT_LIBRARIES})
+
+add_executable(run_inference ${HOST_SRCS})
+target_include_directories(run_inference PRIVATE ${DNNK_INCLUDE_DIRS} ${TORCH_INCLUDE_DIRS} ${VITIS_INCLUDE_DIRS})
+target_link_libraries(run_inference PRIVATE ${TORCH_LIBRARIES} ${VITIS_LIBRARIES})
+target_compile_options(run_inference PRIVATE "-DPROJECT_ROOT=\"${CMAKE_SOURCE_DIR}\"")
+target_compile_features(run_inference PRIVATE cxx_std_14)
+
 # xclbin
 function (add_xclbin name top ini_file platform)
 
