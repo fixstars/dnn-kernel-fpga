@@ -91,12 +91,30 @@ function(add_impl name top)
     )
 endfunction()
 
+function(add_xo name top)
+  cmake_parse_arguments(ARG "" "" "HLS_SRC;CXXFLAGS" ${ARGN})
+
+  abs_path(${ARG_HLS_SRC} abs_hls_srcs)
+
+  set(include_dirs ${DNNK_INCLUDE_DIRS} ${TORCH_INCLUDE_DIRS})
+  prepend_option("${include_dirs}" "-I" include_options)
+  set(cxxflags ${ARG_CXXFLAGS} ${include_options})
+  list2str("${cxxflags}" cxxflags_str)
+
+  add_custom_target(
+    ${name}
+    COMMAND vivado_hls -f ${TB_TCL} "xo" ${name} "${abs_hls_srcs}" ${top} ${CHIP_PART} "cxxflags=${cxxflags_str}" ${ARG_UNPARSED_ARGUMENTS}
+    WORKING_DIRECTORY ${WORK_DIR}
+    )
+endfunction()
+
 function(add_test_and_impl name top)
   cmake_parse_arguments(ARG "" "" "HLS_SRC;TB_SRC;CXXFLAGS" ${ARGN})
 
   add_csim(${name}_csim CXXFLAGS ${ARG_CXXFLAGS} HLS_SRC ${ARG_HLS_SRC} TB_SRC ${ARG_TB_SRC})
   add_cosim(${name}_cosim ${top} CXXFLAGS ${ARG_CXXFLAGS} HLS_SRC ${ARG_HLS_SRC} TB_SRC ${ARG_TB_SRC})
   add_impl(${name}_impl ${top} CXXFLAGS ${ARG_CXXFLAGS} HLS_SRC ${ARG_HLS_SRC})
+  add_xo(${name}_xo ${top} CXXFLAGS ${ARG_CXXFLAGS} HLS_SRC ${ARG_HLS_SRC})
 endfunction()
 
 add_subdirectory(relu)

@@ -33,4 +33,9 @@ if {${mode} == "impl"} {
     export_design -flow impl -rtl verilog -format ip_catalog
 }
 
+if {${mode} == "xo"} {
+    config_sdx -target xocc
+    export_design -flow impl -rtl verilog -format ip_catalog -xo ${name}.xo
+}
+
 exit
