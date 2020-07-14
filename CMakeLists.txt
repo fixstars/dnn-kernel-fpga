@@ -29,6 +29,7 @@ elseif (${TARGET_BOARD} STREQUAL "u280")
   set(CHIP_PART "xcu280-fsvh2892-2L-e")
 elseif (${TARGET_BOARD} STREQUAL "u50")
   set(CHIP_PART "xcu50-fsvh2104-2-e")
+  set(VITIS_PLATFORM "/opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_201920_3/xilinx_u50_gen3x16_xdma_201920_3.xpfm")
 else()
   message(FATAL_ERROR "Unknown TARGET_BOARD value \"${TARGET_BOARD}\"")
 endif()
@@ -73,3 +74,4 @@ message(STATUS "Path to Vivado HLS: ${VIVADO_HLS_ROOT}")
 
 # tests
 add_subdirectory(tests)
+add_subdirectory(host)
