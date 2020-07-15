@@ -47,8 +47,8 @@ void setup_inouts(cl::Context& context,
 
   // define loader and set batch_size to 1
   auto data_loader =
-    torch::data::make_data_loader(std::move(dataset),
-                                  torch::data::DataLoaderOptions().batch_size(1));
+    torch::data::make_data_loader<torch::data::samplers::SequentialSampler>(std::move(dataset),
+                                                                            torch::data::DataLoaderOptions().batch_size(1));
 
   // create reference data
   int num_iter = 0;
