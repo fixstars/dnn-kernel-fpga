@@ -20,7 +20,7 @@ add_files ${hls_srcs} -cflags "${cxxflags}"
 
 open_solution "solution1"
 set_part ${chip_part}
-create_clock -period 5.00 -name default
+create_clock -period 3.33 -name default
 
 csynth_design
 
@@ -34,7 +34,8 @@ if {${mode} == "impl"} {
 }
 
 if {${mode} == "xo"} {
-    config_sdx -target xocc
+    config_rtl -kernel_profile
+    config_sdx -target xocc -profile true
     export_design -flow impl -rtl verilog -format ip_catalog -xo ${name}.xo
 }
 
