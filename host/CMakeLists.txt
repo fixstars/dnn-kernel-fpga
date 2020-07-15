@@ -14,7 +14,7 @@ target_compile_options(run_inference PRIVATE "-DPROJECT_ROOT=\"${CMAKE_SOURCE_DI
 target_compile_features(run_inference PRIVATE cxx_std_14)
 
 # xclbin
-function (add_xclbin name top ini_file platform)
+function (add_xclbin name top target ini_file platform)
 
   abs_path(${ini_file} abs_ini_file)
 
@@ -27,9 +27,11 @@ function (add_xclbin name top ini_file platform)
 
   add_custom_target(
     ${name}
-    COMMAND v++ --link --target hw --platform ${platform} --config ${target_ini_file} --temp_dir build --save-temps ${abs_xo_file} -o ${top}.xclbin
+    COMMAND v++ --link --target ${target} --platform ${platform} --config ${target_ini_file} --temp_dir build --save-temps ${abs_xo_file} -o ${name}.xclbin
     WORKING_DIRECTORY ${WORK_DIR}
     )
 endfunction()
 
-add_xclbin(inference_top_hw inference_top link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
+
+add_xclbin(inference_top_hw inference_top hw link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
+add_xclbin(inference_top_sw inference_top sw_emu link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
