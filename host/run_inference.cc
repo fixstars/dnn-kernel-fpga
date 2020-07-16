@@ -9,6 +9,7 @@
 #include <cstdlib>
 #include <cstdint>
 #include <algorithm>
+#include <stdexcept>
 
 #include <torch/torch.h>
 #include <torch/script.h>
@@ -18,7 +19,21 @@
 
 void setup_parameters(cl::Context& context,
                       cl::CommandQueue& queue,
+                      cl::Kernel& kernel,
                       std::map<std::string, cl::Buffer>& buf_params) {
+
+  std::vector<std::string> kernel_args = {
+    "-",
+    "conv1.weight",
+    "conv1.bias",
+    "conv2.weight",
+    "conv2.bias",
+    "fc1.weight",
+    "fc1.bias",
+    "fc2.weight",
+    "fc2.bias",
+  };
+
   // load model file
   auto model = torch::jit::load(PROJECT_ROOT "/learning/traced_model.pt");
 
@@ -28,16 +43,27 @@ void setup_parameters(cl::Context& context,
     std::size_t buffer_size = param_ref.value.numel() * sizeof(float);
 
     // use param_ref.name as key (ex: "conv1.weight"), and initialize device buffer
-    buf_params[param_ref.name] = std::move(cl::Buffer(context, CL_MEM_READ_ONLY, buffer_size));
+    {
+      cl::Buffer buf(context, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, buffer_size, param_ref.value.data_ptr<float>(), nullptr);
+      buf_params[param_ref.name] = std::move(buf);
+    }
+
+    // set kernel argument
+    auto index = std::distance(kernel_args.begin(), std::find(kernel_args.begin(), kernel_args.end(), param_ref.name));
+    if (index == kernel_args.size()) {
+      throw std::runtime_error("Unknown parameter name: " + param_ref.name);
+    }
+    kernel.setArg(index, buf_params[param_ref.name]);
 
     // copy parameter data into the device buffer
-    queue.enqueueWriteBuffer(buf_params[param_ref.name], true /*blocking*/, 0, buffer_size, param_ref.value.data_ptr<float>());
+    queue.enqueueMigrateMemObjects({buf_params[param_ref.name]}, 0);
   }
   queue.finish();
 }
 
 void setup_inouts(cl::Context& context,
                   cl::CommandQueue& queue,
+                  cl::Kernel& kernel,
                   std::vector<cl::Buffer>& buf_x,
                   std::vector<cl::Buffer>& buf_y,
                   std::vector<int64_t>& answers) {
@@ -53,17 +79,20 @@ void setup_inouts(cl::Context& context,
   // create reference data
   int num_iter = 0;
   for (auto& batch : *data_loader) {
-    auto x_ref = batch.data;
-    auto y_ref = batch.target;
+    auto& x_ref = batch.data;
+    auto& y_ref = batch.target;
 
     auto x_size = x_ref.numel() * sizeof(float);
     auto y_size = 10 * sizeof(float);
 
-    buf_x.emplace_back(context, CL_MEM_READ_ONLY, x_size);
+    buf_x.emplace_back(context, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, x_size, x_ref.data_ptr<float>(), nullptr);
     buf_y.emplace_back(context, CL_MEM_WRITE_ONLY, y_size);
-    answers.push_back(*y_ref.data_ptr<int64_t>());
+    answers.push_back(*(y_ref.data_ptr<int64_t>()));
 
-    queue.enqueueWriteBuffer(buf_x[buf_x.size() - 1], true /*blocking*/, 0, x_size, x_ref.data_ptr<float>());
+    // copy to device
+    cl::Buffer& target = buf_x[buf_x.size() - 1];
+    kernel.setArg(0, target);
+    queue.enqueueMigrateMemObjects({target}, 0);
 
     if (++num_iter == 1000) {
       break;
@@ -100,18 +129,8 @@ int main(int argc, char* argv[]) {
   std::vector<int64_t> answers;
 
   // setup device buffers
-  setup_parameters(context, queue, buf_params);
-  setup_inouts(context, queue, buf_x, buf_y, answers);
-
-  // set kernel arguments
-  kernel.setArg(1, buf_params.at("conv1.weight"));
-  kernel.setArg(2, buf_params.at("conv1.bias"));
-  kernel.setArg(3, buf_params.at("conv2.weight"));
-  kernel.setArg(4, buf_params.at("conv2.bias"));
-  kernel.setArg(5, buf_params.at("fc1.weight"));
-  kernel.setArg(6, buf_params.at("fc1.bias"));
-  kernel.setArg(7, buf_params.at("fc2.weight"));
-  kernel.setArg(8, buf_params.at("fc2.bias"));
+  setup_parameters(context, queue, kernel, buf_params);
+  setup_inouts(context, queue, kernel, buf_x, buf_y, answers);
 
   // run
   for (std::size_t i = 0; i < buf_x.size(); i++) {
