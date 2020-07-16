@@ -13,6 +13,18 @@ target_link_libraries(run_inference PRIVATE ${TORCH_LIBRARIES} ${VITIS_LIBRARIES
 target_compile_options(run_inference PRIVATE "-DPROJECT_ROOT=\"${CMAKE_SOURCE_DIR}\"")
 target_compile_features(run_inference PRIVATE cxx_std_14)
 
+# xo
+function (add_xo name top target sources platform)
+  set(include_dirs ${DNNK_INCLUDE_DIRS})
+  prepend_option("${include_dirs}" "-I" include_options)
+
+  add_custom_target(
+    ${name}_xo
+    COMMAND v++ -g --compile --target ${target} --kernel ${top} --platform ${platform} --profile_kernel data:all:all:all --profile_kernel stall:all:all:all --temp_dir build_${name} --save-temps ${include_options} ${sources} -o ${name}.xo
+    WORKING_DIRECTORY ${WORK_DIR}
+    )
+endfunction()
+
 # xclbin
 function (add_xclbin name top target ini_file platform)
 
@@ -23,15 +35,21 @@ function (add_xclbin name top target ini_file platform)
 
   configure_file(${abs_ini_file} ${target_ini_file})
   
-  set(abs_xo_file "${CMAKE_BINARY_DIR}/tests/hls/inference/${top}_xo.xo")
-
   add_custom_target(
     ${name}
-    COMMAND v++ --link --target ${target} --platform ${platform} --config ${target_ini_file} --temp_dir build --save-temps ${abs_xo_file} -o ${name}.xclbin
+    COMMAND v++ -g --link --target ${target} --platform ${platform} --config ${target_ini_file} --temp_dir build_${name} --save-temps ${name}.xo -o ${name}.xclbin
     WORKING_DIRECTORY ${WORK_DIR}
     )
 endfunction()
 
+function (add_xo_and_xclbin name top sources ini_file platform)
 
-add_xclbin(inference_top_hw inference_top hw link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
-add_xclbin(inference_top_sw inference_top sw_emu link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
+  add_xo(${name}_hw ${top} hw ${sources} ${platform})
+  add_xo(${name}_sw ${top} sw_emu ${sources} ${platform})
+  add_xclbin(${name}_hw ${top} hw ${ini_file} ${platform})
+  add_xclbin(${name}_sw ${top} sw_emu ${ini_file} ${platform})
+endfunction()
+  
+get_filename_component(inference_src ../tests/hls/inference/inference_hls.cc ABSOLUTE)
+
+add_xo_and_xclbin(inference_top inference_top ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
