@@ -8,10 +8,6 @@ A project for self-implementation and testing kernels of deep learning.
 - Vivado HLS (>= 2019.2)
 
 ## Build
-#### Clone
-```sh
-git clone ssh://git@gl.fixstars.com:8022/acri/dnn-kernel.git
-```
 
 #### Build
 ```sh
