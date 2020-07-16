@@ -28,7 +28,7 @@ void setup_parameters(cl::Context& context,
     std::size_t buffer_size = param_ref.value.numel() * sizeof(float);
 
     // use param_ref.name as key (ex: "conv1.weight"), and initialize device buffer
-    buf_params[param_ref.name] = std::move(cl::Buffer(context, CL_MEM_WRITE_ONLY, buffer_size));
+    buf_params[param_ref.name] = std::move(cl::Buffer(context, CL_MEM_READ_ONLY, buffer_size));
 
     // copy parameter data into the device buffer
     queue.enqueueWriteBuffer(buf_params[param_ref.name], true /*blocking*/, 0, buffer_size, param_ref.value.data_ptr<float>());
@@ -59,8 +59,8 @@ void setup_inouts(cl::Context& context,
     auto x_size = x_ref.numel() * sizeof(float);
     auto y_size = 10 * sizeof(float);
 
-    buf_x.emplace_back(context, CL_MEM_WRITE_ONLY, x_size);
-    buf_y.emplace_back(context, CL_MEM_READ_ONLY, y_size);
+    buf_x.emplace_back(context, CL_MEM_READ_ONLY, x_size);
+    buf_y.emplace_back(context, CL_MEM_WRITE_ONLY, y_size);
     answers.push_back(*y_ref.data_ptr<int64_t>());
 
     queue.enqueueWriteBuffer(buf_x[buf_x.size() - 1], true /*blocking*/, 0, x_size, x_ref.data_ptr<float>());
