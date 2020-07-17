@@ -115,7 +115,7 @@ int main(int argc, char* argv[]) {
   auto context = clhelper.get_context();
   auto program = clhelper.get_program();
 
-  cl::CommandQueue queue(context, device, CL_QUEUE_PROFILING_ENABLE);
+  cl::CommandQueue queue(context, device, CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE);
 
   // create kernel object
   cl::Kernel kernel(program, kernel_name.c_str());
