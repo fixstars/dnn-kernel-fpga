@@ -40,11 +40,14 @@ void setup_parameters(cl::Context& context,
   // load parameter values from model and copy to the device memory
   for (const auto& param_ref : model.named_parameters()) {
 
-    std::size_t buffer_size = param_ref.value.numel() * sizeof(float);
+    dnnk::aligned_vector<float> host_buf(param_ref.value.numel());
+
+    float* ptr = param_ref.value.data_ptr<float>();
+    std::copy(ptr, ptr + host_buf.size(), host_buf.begin());
 
     // use param_ref.name as key (ex: "conv1.weight"), and initialize device buffer
     {
-      cl::Buffer buf(context, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, buffer_size, param_ref.value.data_ptr<float>(), nullptr);
+      cl::Buffer buf(context, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, host_buf.size() * sizeof(float), host_buf.data(), nullptr);
       buf_params[param_ref.name] = std::move(buf);
     }
 
@@ -57,8 +60,8 @@ void setup_parameters(cl::Context& context,
 
     // copy parameter data into the device buffer
     queue.enqueueMigrateMemObjects({buf_params[param_ref.name]}, 0);
+    queue.finish();
   }
-  queue.finish();
 }
 
 void setup_inouts(cl::Context& context,
@@ -85,7 +88,11 @@ void setup_inouts(cl::Context& context,
     auto x_size = x_ref.numel() * sizeof(float);
     auto y_size = 10 * sizeof(float);
 
-    buf_x.emplace_back(context, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, x_size, x_ref.data_ptr<float>(), nullptr);
+    dnnk::aligned_vector<float> host_buf(x_ref.numel());
+    float* x_ptr = x_ref.data_ptr<float>();
+    std::copy(x_ptr, x_ptr + host_buf.size(), host_buf.begin());
+
+    buf_x.emplace_back(context, CL_MEM_READ_ONLY | CL_MEM_USE_HOST_PTR, x_size, host_buf.data(), nullptr);
     buf_y.emplace_back(context, CL_MEM_WRITE_ONLY, y_size);
     answers.push_back(*(y_ref.data_ptr<int64_t>()));
 
@@ -93,12 +100,12 @@ void setup_inouts(cl::Context& context,
     cl::Buffer& target = buf_x[buf_x.size() - 1];
     kernel.setArg(0, target);
     queue.enqueueMigrateMemObjects({target}, 0);
+    queue.finish();
 
     if (++num_iter == 1000) {
       break;
     }
   }
-  queue.finish();
 }
 
 

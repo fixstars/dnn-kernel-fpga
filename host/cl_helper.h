@@ -1,6 +1,7 @@
 #ifndef DNNKERNEL_CL_HELPER_H
 #define DNNKERNEL_CL_HELPER_H
 
+#include <cstdlib>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -66,6 +67,35 @@ private:
     cl::Context context_;
     cl::Program program_;
 };
+
+
+template <typename T>
+class aligned_allocator {
+public:
+  using value_type = T;
+
+  aligned_allocator() = default;
+
+  template <class U>
+  constexpr aligned_allocator(const aligned_allocator<U>&) noexcept {}
+
+  T* allocate(std::size_t size) {
+    void* ptr = nullptr;
+
+    if (posix_memalign(&ptr, 4096, size * sizeof(T))) {
+      throw std::bad_alloc();
+    }
+
+    return reinterpret_cast<T*>(ptr);
+  }
+
+  void deallocate(T* ptr, std::size_t size) {
+    free(ptr);
+  }
+};
+
+template <typename T>
+using aligned_vector = std::vector<T, aligned_allocator<T>>;
 
 }
 
