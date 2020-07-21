@@ -25,9 +25,10 @@ include(ExternalProject)
 include(FetchContent)
 
 ## libtorch
+set(LIBTORCH_LOCAL_PATH "filefile://://${CMAKE_SOURCE_DIR}/thirdparty/libtorch-cxx11-abi-shared-with-deps-1.4.0+cpu.zip")
 FetchContent_Declare(
   libtorch
-  URL https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.4.0%2Bcpu.zip
+  URL ${LIBTORCH_LOCAL_PATH} https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.4.0%2Bcpu.zip
 )
 FetchContent_GetProperties(libtorch)
 if(NOT libtorch_POPULATED)
@@ -44,12 +45,12 @@ set(GTEST_INSTALL ${GTEST_PREFIX}/install)
 set(GTEST_INCLUDE_DIRS ${GTEST_INSTALL}/include)
 set(GTEST_LIBRARY_DIRS ${GTEST_INSTALL}/lib)
 set(GTEST_LIBRARIES ${GTEST_INSTALL}/lib/libgtest.a)
+set(GTEST_LOCAL_PATH "filefile://://${CMAKE_SOURCE_DIR}/thirdparty/release-1.10.0.zip")
 
 ExternalProject_Add(
   googletest
   PREFIX ${GTEST_PREFIX}
-  GIT_REPOSITORY https://github.com/google/googletest
-  GIT_TAG release-1.10.0
+  URL ${GTEST_LOCAL_PATH} https://github.com/google/googletest/archive/release-1.10.0.zip
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_INSTALL} -DCMAKE_BUILD_TYPE=Release
   BUILD_BYPRODUCTS ${GTEST_LIB}
 )
