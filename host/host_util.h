@@ -1,11 +1,12 @@
-#ifndef DNNKERNEL_CL_HELPER_H
-#define DNNKERNEL_CL_HELPER_H
+#ifndef DNNKERNEL_HOST_UTIL_H
+#define DNNKERNEL_HOST_UTIL_H
 
 #include <cstdlib>
 #include <vector>
 #include <string>
 #include <fstream>
 #include <CL/cl2.hpp>
+#include <chrono>
 
 namespace dnnk {
 
@@ -96,6 +97,32 @@ public:
 
 template <typename T>
 using aligned_vector = std::vector<T, aligned_allocator<T>>;
+
+
+class StopWatch {
+public:
+  StopWatch() = default;
+
+  void start() {
+    tstart_ = clock::now();
+  }
+
+  void stop() {
+    tstop_ = clock::now();
+  }
+
+  double elapsed_time_ms() const {
+    auto elapsed_micro = std::chrono::duration_cast<std::chrono::microseconds>(tstop_ - tstart_).count();
+    return elapsed_micro / 1000.0;
+  }
+
+private:
+  using clock = std::chrono::high_resolution_clock;
+  using time_point = std::chrono::time_point<clock>;
+
+  time_point tstart_;
+  time_point tstop_;
+};
 
 }
 

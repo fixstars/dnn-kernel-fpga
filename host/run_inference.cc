@@ -3,7 +3,7 @@
 #define CL_HPP_TARGET_OPENCL_VERSION 120
 #define CL_HPP_MINIMUM_OPENCL_VERSION 120
 
-#include "cl_helper.h"
+#include "host_util.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -15,6 +15,9 @@
 #include <torch/script.h>
 
 #include <tests/util.h>
+
+
+static const std::size_t kNumTestImages = 1000;
 
 
 void setup_parameters(cl::Context& context,
@@ -102,7 +105,7 @@ void setup_inouts(cl::Context& context,
     queue.enqueueMigrateMemObjects({target}, 0);
     queue.finish();
 
-    if (++num_iter == 1000) {
+    if (++num_iter == kNumTestImages) {
       break;
     }
   }
@@ -140,6 +143,8 @@ int main(int argc, char* argv[]) {
   setup_inouts(context, queue, kernel, buf_x, buf_y, answers);
 
   // run
+  dnnk::StopWatch sw;
+  sw.start();
   for (std::size_t i = 0; i < buf_x.size(); i++) {
     kernel.setArg(0, buf_x[i]);
     kernel.setArg(9, buf_y[i]);
@@ -147,6 +152,9 @@ int main(int argc, char* argv[]) {
     queue.enqueueTask(kernel);
   }
   queue.finish();
+  sw.stop();
+
+  std::cout << "Elapsed time: " << sw.elapsed_time_ms() / kNumTestImages << " [ms/image]" << std::endl;
 
   // get results from device buffer
   std::vector<std::array<float, 10>> results(buf_x.size());
