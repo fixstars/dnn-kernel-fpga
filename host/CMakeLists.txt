@@ -45,9 +45,11 @@ endfunction()
 function (add_xo_and_xclbin name top sources ini_file platform)
 
   add_xo(${name}_hw ${top} hw ${sources} ${platform})
-  add_xo(${name}_sw ${top} sw_emu ${sources} ${platform})
+  add_xo(${name}_hw_emu ${top} hw_emu ${sources} ${platform})
+  add_xo(${name}_sw_emu ${top} sw_emu ${sources} ${platform})
   add_xclbin(${name}_hw ${top} hw ${ini_file} ${platform})
-  add_xclbin(${name}_sw ${top} sw_emu ${ini_file} ${platform})
+  add_xclbin(${name}_hw_emu ${top} hw_emu ${ini_file} ${platform})
+  add_xclbin(${name}_sw_emu ${top} sw_emu ${ini_file} ${platform})
 endfunction()
   
 get_filename_component(inference_src ../tests/hls/inference/inference_hls.cc ABSOLUTE)
