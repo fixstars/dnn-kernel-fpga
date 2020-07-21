@@ -54,8 +54,6 @@ void inference_dataflow(const float x[kMaxSize],
                         const float weight3[kMaxSize], const float bias3[kMaxSize],
                         float y[kMaxSize]) {
 #pragma HLS dataflow
-#pragma HLS interface s_axilite port=return bundle=control
-#pragma HLS interface ap_ctrl_chain port=return bundle=control
 #pragma HLS interface m_axi port=x offset=slave bundle=gmem0
 #pragma HLS interface m_axi port=weight0 offset=slave bundle=gmem1
 #pragma HLS interface m_axi port=weight1 offset=slave bundle=gmem2
@@ -66,6 +64,29 @@ void inference_dataflow(const float x[kMaxSize],
 #pragma HLS interface m_axi port=bias2 offset=slave bundle=gmem7
 #pragma HLS interface m_axi port=bias3 offset=slave bundle=gmem8
 #pragma HLS interface m_axi port=y offset=slave bundle=gmem9
+#pragma HLS interface s_axilite port=x bundle=control
+#pragma HLS interface s_axilite port=weight0 bundle=control
+#pragma HLS interface s_axilite port=weight1 bundle=control
+#pragma HLS interface s_axilite port=weight2 bundle=control
+#pragma HLS interface s_axilite port=weight3 bundle=control
+#pragma HLS interface s_axilite port=bias0 bundle=control
+#pragma HLS interface s_axilite port=bias1 bundle=control
+#pragma HLS interface s_axilite port=bias2 bundle=control
+#pragma HLS interface s_axilite port=bias3 bundle=control
+#pragma HLS interface s_axilite port=y bundle=control
+#pragma HLS interface s_axilite port=return bundle=control
+#pragma HLS interface ap_ctrl_chain port=return bundle=control
+
+#pragma HLS stable variable=x
+#pragma HLS stable variable=weight0
+#pragma HLS stable variable=bias0
+#pragma HLS stable variable=weight1
+#pragma HLS stable variable=bias1
+#pragma HLS stable variable=weight2
+#pragma HLS stable variable=bias2
+#pragma HLS stable variable=weight3
+#pragma HLS stable variable=bias3
+#pragma HLS stable variable=y
 
   dnnk::inference<1, 4, 8, 32, 10>(x,
                                    weight0, bias0,
