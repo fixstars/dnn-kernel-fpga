@@ -10,14 +10,13 @@
 #include <algorithm>
 
 namespace dnnk {
-namespace {
 
-void inference(const float *x,
-               const float* weight0, const float* bias0,
-               const float* weight1, const float* bias1,
-               const float* weight2, const float* bias2,
-               const float* weight3, const float* bias3,
-               float *y) {
+static void inference(const float* x,
+                      const float* weight0, const float* bias0,
+                      const float* weight1, const float* bias1,
+                      const float* weight2, const float* bias2,
+                      const float* weight3, const float* bias3,
+                      float* y) {
 #pragma HLS inline
 
   static const int kWidths[] = {28, 14, 7};
@@ -51,7 +50,6 @@ void inference(const float *x,
   linear(x8, weight3, bias3, kChannels[3], kChannels[4], y);
 }
 
-}  // namespace
 }  // namespace dnnk
 
 #endif  // DNNKERNEL_INFERENCE_H
