@@ -11,12 +11,12 @@ void inference_hls(const float x[kMaxSize],
                    const float weight2[kMaxSize], const float bias2[kMaxSize],
                    const float weight3[kMaxSize], const float bias3[kMaxSize],
                    float y[kMaxSize]) {
-  dnnk::inference<1, 4, 8, 32, 10>(x,
-                                   weight0, bias0,
-                                   weight1, bias1,
-                                   weight2, bias2,
-                                   weight3, bias3,
-                                   y);
+  dnnk::inference(x,
+                  weight0, bias0,
+                  weight1, bias1,
+                  weight2, bias2,
+                  weight3, bias3,
+                  y);
 }
 
 extern "C" {
@@ -27,7 +27,6 @@ void inference_top(const float x[kMaxSize],
                    const float weight2[kMaxSize], const float bias2[kMaxSize],
                    const float weight3[kMaxSize], const float bias3[kMaxSize],
                    float y[kMaxSize]) {
-#pragma HLS interface s_axilite port=return bundle=control
 #pragma HLS interface m_axi port=x offset=slave bundle=gmem0
 #pragma HLS interface m_axi port=weight0 offset=slave bundle=gmem1
 #pragma HLS interface m_axi port=weight1 offset=slave bundle=gmem2
@@ -38,6 +37,17 @@ void inference_top(const float x[kMaxSize],
 #pragma HLS interface m_axi port=bias2 offset=slave bundle=gmem7
 #pragma HLS interface m_axi port=bias3 offset=slave bundle=gmem8
 #pragma HLS interface m_axi port=y offset=slave bundle=gmem9
+#pragma HLS interface s_axilite port=x bundle=control
+#pragma HLS interface s_axilite port=weight0 bundle=control
+#pragma HLS interface s_axilite port=weight1 bundle=control
+#pragma HLS interface s_axilite port=weight2 bundle=control
+#pragma HLS interface s_axilite port=weight3 bundle=control
+#pragma HLS interface s_axilite port=bias0 bundle=control
+#pragma HLS interface s_axilite port=bias1 bundle=control
+#pragma HLS interface s_axilite port=bias2 bundle=control
+#pragma HLS interface s_axilite port=bias3 bundle=control
+#pragma HLS interface s_axilite port=y bundle=control
+#pragma HLS interface s_axilite port=return bundle=control
 
   dnnk::inference(x,
                   weight0, bias0,
