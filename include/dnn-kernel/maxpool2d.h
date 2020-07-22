@@ -7,9 +7,8 @@
 #include <limits>
 
 namespace dnnk {
-namespace {
 
-void maxpool2d(const float *x, int32_t width, int32_t height, int32_t channels, int32_t stride, float *y) {
+static void maxpool2d(const float *x, int32_t width, int32_t height, int32_t channels, int32_t stride, float *y) {
   for (int ch = 0; ch < channels; ++ch) {
     for (int32_t h = 0; h < height; h += stride) {
       for (int32_t w = 0; w < width; w += stride) {
@@ -27,7 +26,6 @@ void maxpool2d(const float *x, int32_t width, int32_t height, int32_t channels, 
   }
 }
 
-}  // namespace
 }  // namespace dnnk
 
 #endif  // DNNKERNEL_MAXPOOL2D_H
