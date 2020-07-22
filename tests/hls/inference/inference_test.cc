@@ -17,6 +17,10 @@
 #error "PROJECT_ROOT is not defined"
 #endif
 
+#ifndef TOP_FUNC
+#error "TOP_FUNC is not defined"
+#endif
+
 static const std::size_t kMaxSize = 16384;
 
 using namespace dnnk;
@@ -62,12 +66,12 @@ int main() {
 
     // run inference
     tensor2array(x_ref, x);
-    inference_hls(x,
-                  params.at("conv1.weight").data(), params.at("conv1.bias").data(),
-                  params.at("conv2.weight").data(), params.at("conv2.bias").data(),
-                  params.at("fc1.weight").data(), params.at("fc1.bias").data(),
-                  params.at("fc2.weight").data(), params.at("fc2.bias").data(),
-                  y);
+    TOP_FUNC (x,
+              params.at("conv1.weight").data(), params.at("conv1.bias").data(),
+              params.at("conv2.weight").data(), params.at("conv2.bias").data(),
+              params.at("fc1.weight").data(), params.at("fc1.bias").data(),
+              params.at("fc2.weight").data(), params.at("fc2.bias").data(),
+              y);
 
 
     // run inference in pytorch

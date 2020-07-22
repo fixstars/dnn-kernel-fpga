@@ -18,7 +18,22 @@ set(DNNK_CXX_FLAGS "-g" "-Wall" "-Wno-uninitialized" "-Wno-unused-function" "-Wn
 # Vivado HLS
 set(VIVADO_HLS_ROOT "/opt/Xilinx/VivadoHLS/2019.1" CACHE STRING "Path to Vivado HLS root directory")
 set(VHLS_INCLUDE_DIRS ${VIVADO_HLS_ROOT}/include)
+set(XILINX_XRT "/opt/xilinx/xrt")
 
+# Target board
+set(TARGET_BOARD "u200" CACHE STRING "Select target Alveo board (available: \"u200\", \"u250\", \"u280\", \"u50\")")
+if (${TARGET_BOARD} STREQUAL "u200")
+  set(CHIP_PART "xcu200-fsgd2104-2-e")
+elseif (${TARGET_BOARD} STREQUAL "u250")
+  set(CHIP_PART "xcu250-figd2104-2L-e")
+elseif (${TARGET_BOARD} STREQUAL "u280")
+  set(CHIP_PART "xcu280-fsvh2892-2L-e")
+elseif (${TARGET_BOARD} STREQUAL "u50")
+  set(CHIP_PART "xcu50-fsvh2104-2-e")
+  set(VITIS_PLATFORM "/opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_201920_3/xilinx_u50_gen3x16_xdma_201920_3.xpfm")
+else()
+  message(FATAL_ERROR "Unknown TARGET_BOARD value \"${TARGET_BOARD}\"")
+endif()
 
 # thirdpartys
 include(ExternalProject)
@@ -61,3 +76,4 @@ message(STATUS "Path to Vivado HLS: ${VIVADO_HLS_ROOT}")
 
 # tests
 add_subdirectory(tests)
+add_subdirectory(host)
