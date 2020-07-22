@@ -14,10 +14,10 @@ void inference_hls(const float x[kMaxSize],
 #pragma HLS dataflow
 #pragma HLS interface s_axilite port = return bundle = BUS_AXI4LS
 
-  dnnk::inference<1, 4, 8, 32, 10>(x,
-                                   weight0, bias0,
-                                   weight1, bias1,
-                                   weight2, bias2,
-                                   weight3, bias3,
-                                   y);
+  dnnk::inference(x,
+                  weight0, bias0,
+                  weight1, bias1,
+                  weight2, bias2,
+                  weight3, bias3,
+                  y);
 }

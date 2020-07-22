@@ -63,12 +63,12 @@ TEST(CPUVerify, Inference) {
 
     // run inference
     tensor2array(x_ref, x.data());
-    inference<1, 4, 8, 32, 10>(x.data(),
-                               params.at("conv1.weight").data(), params.at("conv1.bias").data(),
-                               params.at("conv2.weight").data(), params.at("conv2.bias").data(),
-                               params.at("fc1.weight").data(), params.at("fc1.bias").data(),
-                               params.at("fc2.weight").data(), params.at("fc2.bias").data(),
-                               y.data());
+    inference(x.data(),
+              params.at("conv1.weight").data(), params.at("conv1.bias").data(),
+              params.at("conv2.weight").data(), params.at("conv2.bias").data(),
+              params.at("fc1.weight").data(), params.at("fc1.bias").data(),
+              params.at("fc2.weight").data(), params.at("fc2.bias").data(),
+              y.data());
 
     EXPECT_TRUE(verify(y.data(), y_ref));
 
