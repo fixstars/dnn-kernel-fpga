@@ -31,63 +31,16 @@ ACRi ルームのサーバー上では外部ネットワークへの接続が不
 $ cp /home/<username>/dnn-kernel-fpga.zip /scratch
 ```
 
-ワーキングディレクトリを移動し解凍します。  
+ワーキングディレクトリを`/scratch`に移動しコピーしたファイルを解凍します。  
 ```
 $ cd /scratch
 $ unzip dnn-kernel-fpga.zip
 ```
 
-cmake 3.16 にパスを通します。  
+cmake 3.16.8 にパスを通します。  
 ```
 $ export PATH=/scratch/dnn-kernel-fpga/thirdparty/cmake-3.16.8-Linux-x86_64/bin:${PATH}`
 ```
 
-cmake プロジェクトを作成し、ホストアプリケーション等をビルドします。  
-```
-$ mkdir /scratch/dnn-kernel-fpga/build
-$ cd /scratch/dnn-kernel-fpga/build
-$ cmake .. -DTARGET_BOARD=u200
-$ make
-```
-
-### ビットストリームの合成
-
-この手順は2時間程度かかります。  
-
-環境変数を設定します。  
-```
-$ source /tools/Xilinx/Vitis/2019.2/settings64.sh
-$ source /opt/xilinx/xrt/setup.sh
-```
-
-.xo 及び .xclbin の作成を行います。  
-```
-$ cd /scratch/dnn-kernel-fpga/build
-$ cmake --build . --target inference_top_hw_xo
-$ cmake --build . --target inference_top_hw
-```
-
-### 実行
-
-`xrt.ini` を準備します。  
-```
-$ cd /scratch/dnn-kernel-fpga/build
-$ echo "[Debug]\ntimeline_trace=true" > xrt.ini
-```
-
-アプリケーションを実行します。  
-```
-$ ./host/run_inference host/inference_top_hw.xclbin inference_top
-```
-
-1分程度で実行が完了し、次のようなログが出ます。  
-```
-Elapsed time: 18.6115 [ms/image]
-accuracy: 0.976 
-```
-
-その後、Vitis Analyzer によりレポートが確認できます。  
-```
-$ vitis_analyzer inference_top_hw.xclbin.run_summary &
-```
-
+以降は、[README.md](../README.md) に記載のビルド・推論処理の手順を行います。  
+MNIST の学習、テストの手順は ACRi ルームのサーバー上では行えません。

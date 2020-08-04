@@ -37,8 +37,15 @@ cmake --build .
 ```
 
 #### FPGA イメージ
-この手順は2時間程度かかります。  
 
+環境変数を設定します。  
+```
+$ source /tools/Xilinx/Vitis/2019.2/settings64.sh
+$ source /opt/xilinx/xrt/setup.sh
+```
+
+ビットストリームの合成を行います。  
+この手順は2時間程度かかります。  
 ```sh
 cmake --build . --target inference_top_hw_xo
 cmake --build . --target inference_top_hw
