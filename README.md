@@ -60,9 +60,13 @@ vitis_analyzer host/inference_top_hw.xclbin.link_summary
 
 ### 推論の実行
 
+トレース取得用に `xrt.ini` を作成します。
 ```sh
-cd build
-echo "[Debug]\ntimeline_trace=true" > xrt.ini
+echo -e "[Debug]\ntimeline_trace=true" > xrt.ini
+```
+
+以下のコマンドで推論処理が実行されます。
+```sh
 ./host/run_inference ./host/inference_top_hw.xclbin inference_top
 ```
 
