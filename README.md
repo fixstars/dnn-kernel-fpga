@@ -74,7 +74,6 @@ echo -e "[Debug]\ntimeline_trace=true" > xrt.ini
 ```sh
 vitis_analyzer inference_top_hw.xclbin.run_summary
 ```
-```
 
 ## テスト
 
