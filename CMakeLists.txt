@@ -24,10 +24,13 @@ set(XILINX_XRT "/opt/xilinx/xrt")
 set(TARGET_BOARD "u200" CACHE STRING "Select target Alveo board (available: \"u200\", \"u250\", \"u280\", \"u50\")")
 if (${TARGET_BOARD} STREQUAL "u200")
   set(CHIP_PART "xcu200-fsgd2104-2-e")
+  set(VITIS_PLATFORM "/opt/xilinx/platforms/xilinx_u200_xdma_201830_2/xilinx_u200_xdma_201830_2.xpfm")
 elseif (${TARGET_BOARD} STREQUAL "u250")
   set(CHIP_PART "xcu250-figd2104-2L-e")
+  set(VITIS_PLATFORM "/opt/xilinx/platforms/xilinx_u250_xdma_201830_2/xilinx_u250_xdma_201830_2.xpfm")
 elseif (${TARGET_BOARD} STREQUAL "u280")
   set(CHIP_PART "xcu280-fsvh2892-2L-e")
+  set(VITIS_PLATFORM "/opt/xilinx/platforms/xilinx_u280-es1_xdma_201910_1/xilinx_u280-es1_xdma_201910_1.xpfm")
 elseif (${TARGET_BOARD} STREQUAL "u50")
   set(CHIP_PART "xcu50-fsvh2104-2-e")
   set(VITIS_PLATFORM "/opt/xilinx/platforms/xilinx_u50_gen3x16_xdma_201920_3/xilinx_u50_gen3x16_xdma_201920_3.xpfm")
@@ -40,9 +43,10 @@ include(ExternalProject)
 include(FetchContent)
 
 ## libtorch
+set(LIBTORCH_LOCAL_PATH "filefile://://${CMAKE_SOURCE_DIR}/thirdparty/libtorch-cxx11-abi-shared-with-deps-1.4.0+cpu.zip")
 FetchContent_Declare(
   libtorch
-  URL https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.4.0%2Bcpu.zip
+  URL ${LIBTORCH_LOCAL_PATH} https://download.pytorch.org/libtorch/cpu/libtorch-cxx11-abi-shared-with-deps-1.4.0%2Bcpu.zip
 )
 FetchContent_GetProperties(libtorch)
 if(NOT libtorch_POPULATED)
@@ -59,12 +63,12 @@ set(GTEST_INSTALL ${GTEST_PREFIX}/install)
 set(GTEST_INCLUDE_DIRS ${GTEST_INSTALL}/include)
 set(GTEST_LIBRARY_DIRS ${GTEST_INSTALL}/lib)
 set(GTEST_LIBRARIES ${GTEST_INSTALL}/lib/libgtest.a)
+set(GTEST_LOCAL_PATH "filefile://://${CMAKE_SOURCE_DIR}/thirdparty/release-1.10.0.zip")
 
 ExternalProject_Add(
   googletest
   PREFIX ${GTEST_PREFIX}
-  GIT_REPOSITORY https://github.com/google/googletest
-  GIT_TAG release-1.10.0
+  URL ${GTEST_LOCAL_PATH} https://github.com/google/googletest/archive/release-1.10.0.zip
   CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${GTEST_INSTALL} -DCMAKE_BUILD_TYPE=Release
   BUILD_BYPRODUCTS ${GTEST_LIB}
 )
