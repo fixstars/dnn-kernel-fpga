@@ -113,19 +113,21 @@ void setup_inouts(cl::Context& context,
 
 
 int main(int argc, char* argv[]) {
-  if (argc != 3) {
-    printf("Usage: %s <xclbin> <kernel_name>\n", argv[0]);
+  if (argc != 4) {
+    printf("Usage: %s <xclbin> <kernel_name> <enable_OoO>\n", argv[0]);
     return 0;
   }
 
   dnnk::ClHelper clhelper(argv[1]);
   std::string kernel_name(argv[2]);
+  bool enable_OoO = (std::atoi(argv[3]) != 0);
 
   auto device = clhelper.get_device();
   auto context = clhelper.get_context();
   auto program = clhelper.get_program();
 
-  cl::CommandQueue queue(context, device, CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE);
+  auto queue_flag = (enable_OoO) ? (CL_QUEUE_PROFILING_ENABLE | CL_QUEUE_OUT_OF_ORDER_EXEC_MODE_ENABLE) : CL_QUEUE_PROFILING_ENABLE;
+  cl::CommandQueue queue(context, device, queue_flag);
 
   // create kernel object
   cl::Kernel kernel(program, kernel_name.c_str());
