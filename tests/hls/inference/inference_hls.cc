@@ -98,12 +98,12 @@ void inference_dataflow(const float x[kMaxSize],
 #pragma HLS stable variable=bias3
 #pragma HLS stable variable=y
 
-  dnnk::inference<1, 4, 8, 32, 10>(x,
-                                   weight0, bias0,
-                                   weight1, bias1,
-                                   weight2, bias2,
-                                   weight3, bias3,
-                                   y);
+  dnnk::inference(x,
+                  weight0, bias0,
+                  weight1, bias1,
+                  weight2, bias2,
+                  weight3, bias3,
+                  y);
 }
 
 }
