@@ -55,3 +55,4 @@ endfunction()
 get_filename_component(inference_src ../tests/hls/inference/inference_hls.cc ABSOLUTE)
 
 add_xo_and_xclbin(inference_top inference_top ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
+add_xo_and_xclbin(inference_dataflow inference_dataflow ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
