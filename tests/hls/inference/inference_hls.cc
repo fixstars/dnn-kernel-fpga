@@ -249,15 +249,13 @@ void inference_with_local_buffer(const float x[kMaxSize],
   std::memcpy(w3_local, weight3, w3_size * sizeof(float));              \
   std::memcpy(b3_local, bias3, b3_size * sizeof(float));                \
                                                                         \
-  dnnk::inference_custom<CONV_FUNC,                                     \
-                         MAXPOOL_FUNC,                                  \
-                         RELU_FUNC,                                     \
-                         LINEAR_FUNC>(x_local,                          \
-                                      w0_local, b0_local,               \
-                                      w1_local, b1_local,               \
-                                      w2_local, b2_local,               \
-                                      w3_local, b3_local,               \
-                                      y_local);                         \
+  dnnk::inference_custom(x_local,                                       \
+                         w0_local, b0_local,                            \
+                         w1_local, b1_local,                            \
+                         w2_local, b2_local,                            \
+                         w3_local, b3_local,                            \
+                         y_local,                                       \
+                         CONV_FUNC, MAXPOOL_FUNC, RELU_FUNC, LINEAR_FUNC); \
                                                                         \
   std::memcpy(y, y_local, y_size * sizeof(float));                      \
 }

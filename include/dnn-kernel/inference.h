@@ -11,18 +11,17 @@
 
 namespace dnnk {
 
-typedef void (*conv2d_t)(const float*, const float*, const float*, int32_t, int32_t, int32_t, int32_t, int32_t, float*);
-typedef void (*maxpool2d_t)(const float*, int32_t, int32_t, int32_t, int32_t, float*);
-typedef void (*relu_t)(const float*, int64_t, float*);
-typedef void (*linear_t)(const float*, const float*, const float*, int64_t, int64_t, float*);
-
-template <conv2d_t conv2d_f, maxpool2d_t maxpool2d_f, relu_t relu_f, linear_t linear_f>
+template <typename CONV_FUNC, typename MAXPOOL_FUNC, typename RELU_FUNC, typename LINEAR_FUNC>
 static void inference_custom(const float* x,
                              const float* weight0, const float* bias0,
                              const float* weight1, const float* bias1,
                              const float* weight2, const float* bias2,
                              const float* weight3, const float* bias3,
-                             float* y) {
+                             float* y,
+                             CONV_FUNC* conv2d_f,
+                             MAXPOOL_FUNC* maxpool2d_f,
+                             RELU_FUNC* relu_f,
+                             LINEAR_FUNC* linear_f) {
 #pragma HLS inline
 
   static const int kWidths[] = {28, 14, 7};
@@ -64,12 +63,13 @@ static void inference(const float* x,
                       float* y) {
 #pragma HLS inline
 
-  inference_custom<conv2d, maxpool2d, relu, linear>(x,
-                                                    weight0, bias0,
-                                                    weight1, bias1,
-                                                    weight2, bias2,
-                                                    weight3, bias3,
-                                                    y);
+  inference_custom(x,
+                   weight0, bias0,
+                   weight1, bias1,
+                   weight2, bias2,
+                   weight3, bias3,
+                   y,
+                   conv2d, maxpool2d, relu, linear);
 }
 
 }  // namespace dnnk
