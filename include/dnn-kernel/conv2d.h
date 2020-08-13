@@ -129,7 +129,7 @@ static void conv2d_pipelined_v2(const float* x, const float* weight, const float
         // global sum
         float sum = 0.f;
         for (int i = 0; i < kShiftRegLength; ++i) {
-#pragma HLS unroll
+#pragma HLS pipeline II=1
           sum += shift_reg[i];
         }
 
