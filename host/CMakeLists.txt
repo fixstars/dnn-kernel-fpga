@@ -57,3 +57,5 @@ get_filename_component(inference_src ../tests/hls/inference/inference_hls.cc ABS
 add_xo_and_xclbin(inference_top inference_top ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
 add_xo_and_xclbin(inference_dataflow inference_dataflow ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
 add_xo_and_xclbin(inference_with_local_buffer inference_with_local_buffer ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
+add_xo_and_xclbin(inference_pipelined_conv_v1 inference_pipelined_conv_v1 ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
+add_xo_and_xclbin(inference_pipelined_conv_v2 inference_pipelined_conv_v2 ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
