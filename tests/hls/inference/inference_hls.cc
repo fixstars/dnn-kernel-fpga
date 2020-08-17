@@ -262,5 +262,7 @@ void inference_with_local_buffer(const float x[kMaxSize],
 
 DECLARE_INFERENCE_WITH_LOCAL_BUFFER(inference_pipelined_conv_v1, dnnk::conv2d_pipelined_v1, dnnk::maxpool2d, dnnk::relu, dnnk::linear);
 DECLARE_INFERENCE_WITH_LOCAL_BUFFER(inference_pipelined_conv_v2, dnnk::conv2d_pipelined_v2, dnnk::maxpool2d, dnnk::relu, dnnk::linear);
+DECLARE_INFERENCE_WITH_LOCAL_BUFFER(inference_unrolledx4_conv_v1, dnnk::conv2d_unrolled_v1<4>, dnnk::maxpool2d, dnnk::relu, dnnk::linear);
+DECLARE_INFERENCE_WITH_LOCAL_BUFFER(inference_unrolledx4_conv_v2, (dnnk::conv2d_unrolled_v2<4, 4>), dnnk::maxpool2d, dnnk::relu, dnnk::linear);
 
 }
