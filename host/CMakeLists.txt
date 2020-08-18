@@ -61,3 +61,4 @@ add_xo_and_xclbin(inference_pipelined_conv_v1 inference_pipelined_conv_v1 ${infe
 add_xo_and_xclbin(inference_pipelined_conv_v2 inference_pipelined_conv_v2 ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
 add_xo_and_xclbin(inference_unrolledx4_conv_v1 inference_unrolledx4_conv_v1 ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
 add_xo_and_xclbin(inference_unrolledx4_conv_v2 inference_unrolledx4_conv_v2 ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
+add_xo_and_xclbin(inference_final inference_final ${inference_src} link_${TARGET_BOARD}_template.ini ${VITIS_PLATFORM})
