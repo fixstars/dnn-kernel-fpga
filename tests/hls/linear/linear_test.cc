@@ -9,6 +9,10 @@
 
 #include <tests/util.h>
 
+#ifndef TOP_FUNC
+#error "TOP_FUNC is not defined"
+#endif
+
 static const std::size_t kMaxSize = 65536;
 
 using namespace dnnk;
@@ -31,7 +35,7 @@ int main() {
   tensor2array(bias_ref, bias);
 
   auto y_ref = F::linear(x_ref, weight_ref, bias_ref);
-  linear_hls(x, weight, bias, in_features, out_features, y);
+  TOP_FUNC (x, weight, bias, in_features, out_features, y);
 
   if (!verify(y, y_ref)) {
     printf("%sFailed%s\n", Color::red, Color::reset);
