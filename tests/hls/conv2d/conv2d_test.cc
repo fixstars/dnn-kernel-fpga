@@ -9,6 +9,10 @@
 
 #include <tests/util.h>
 
+#ifndef TOP_FUNC
+#error "TOP_FUNC is not defined"
+#endif
+
 static const std::size_t kMaxSize = 65536;
 
 using namespace dnnk;
@@ -31,7 +35,7 @@ int main() {
   tensor2array(bias_ref, bias);
 
   auto y_ref = F::detail::conv2d(x_ref, weight_ref, bias_ref, 1, ksize/2, 1, 1);
-  conv2d_hls(x, weight, bias, w, h, in_channels, out_channels, ksize, y);
+  TOP_FUNC (x, weight, bias, w, h, in_channels, out_channels, ksize, y);
 
   if (!verify(y, y_ref)) {
     printf("%sFailed%s\n", Color::red, Color::reset);

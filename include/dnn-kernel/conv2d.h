@@ -166,12 +166,13 @@ static void conv2d_unrolled_v1(const float* x, const float* weight, const float*
                   int32_t ph = h + kh - ksize/2;
                   int32_t pw = w + kw - ksize/2;
 
+                  float last = (ich == 0 && kh == 0 && kw == 0) ? 0 : sum[local_w];
+
                   // zero padding
                   if (ph < 0 || ph >= height || pw < 0 || pw >= width) {
+                    sum[local_w] = last;
                     continue;
                   }
-
-                  float last = (ich == 0 && kh == 0 && kw == 0) ? 0 : sum[local_w];
 
                   int64_t pix_idx = (ich * height + ph) * width + pw;
                   int64_t weight_idx = ((och * in_channels + ich) * ksize + kh) * ksize + kw;
@@ -179,7 +180,6 @@ static void conv2d_unrolled_v1(const float* x, const float* weight, const float*
                   sum[local_w] = last + x[pix_idx] * weight[weight_idx];
                 }
               }
-
             }
           }
         }
@@ -226,12 +226,13 @@ static void conv2d_unrolled_v2(const float* x, const float* weight, const float*
                     int32_t ph = h + kh - ksize/2;
                     int32_t pw = w + kw - ksize/2;
 
+                    float last = (ich == 0 && kh == 0 && kw == 0) ? 0 : sum[local_och][local_w];
+
                     // zero padding
                     if (ph < 0 || ph >= height || pw < 0 || pw >= width) {
+                      sum[local_och][local_w] = last;
                       continue;
                     }
-
-                    float last = (ich == 0 && kh == 0 && kw == 0) ? 0 : sum[local_och][local_w];
 
                     int64_t pix_idx = (ich * height + ph) * width + pw;
                     int64_t weight_idx = ((och * in_channels + ich) * ksize + kh) * ksize + kw;
