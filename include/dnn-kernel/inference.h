@@ -78,10 +78,10 @@ static void inference_custom(const float* x,
                    weight2, bias2,
                    weight3, bias3,
                    y,
-                   conv2d, relu, maxpool2d,
-                   conv2d, relu, maxpool2d,
-                   linear, relu,
-                   linear);
+                   conv2d_f, relu_f, maxpool2d_f,
+                   conv2d_f, relu_f, maxpool2d_f,
+                   linear_f, relu_f,
+                   linear_f);
 }
 
 static void inference(const float* x,
